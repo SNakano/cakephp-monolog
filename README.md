@@ -1,12 +1,8 @@
-[![Build Status](https://secure.travis-ci.org/jadb/cakephp-monolog.png?branch=master)](http://travis-ci.org/jadb/cakephp-monolog)
-
 # CakePHP Monolog Plugin
 
 Despite the very advanced logging system offered in [CakePHP][1], I still would have had to write
 a lot more code to be able to handle logs the way I needed. To write the least code possible, I
 chose to go with the popular monolog library.
-
-> __NOTE__ The package name changed to jadb/cakephp-monolog, to not violate the cakephp namespace.
 
 ## Install
 
@@ -14,7 +10,7 @@ Because [monolog][2] is a [composer][3] [package][4] and to avoid having to manu
 includes (vs. auto-loading), I decided to release this also as a composer package and take advantage
 of the auto-loading magic.
 
-First, add this plugin as a requirement to your `composer.json`:
+First, add this plugin as a requirement to your `composer.json`
 
 	{
 		"require": {
@@ -41,6 +37,11 @@ A basic configuration, to replicate what Cake does but using Monolog (to give yo
 example), would look something like this:
 
 ```
+require VENDORS . 'autoload.php';
+App::build([
+	'Plugin' => [ROOT . DS . 'Plugin' . DS]
+]);
+
 CakePlugin::load('Monolog');
 
 CakeLog::config('debug', array(
@@ -74,19 +75,21 @@ CakeLog::config('logstash', array(
 	'channel' => 'app',
 	'handlers' => array(
 		'RotatingFile' => array(
-			LOGS . 'logstash.log',
-			30,
-			'formatters' => array(
-				'Logstash' => array('web', env('SERVER_ADDR'))
-			),
-			'processors' => array('MemoryPeakUsage')
+			LOGS . 'application.log',
+			30
 		),
 		'Stream' => array(
 			LOGS . 'logstash.log',
 			'formatters' => array(
-				'Line' => array("%datetime% %channel% %level_name%: %message% %context% %extra%\n")
+				'Line' => array("%datetime% %channel% %level_name%: %message%\n")
 			),
-			'processors' => array('MemoryUsage', 'Web')
+			'processors' => array(
+				'DatadogProcessor' => array(
+					'search' => CakePlugin::path('Monolog') . 'Lib' . DS . 'Log' . DS . 'Processor'
+				),
+				'MemoryUsage' => array(),
+				'Web' => array()
+			)
 		),
 		'CakeEmail' => array(
 			'admin@domain.com',
