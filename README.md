@@ -1,8 +1,12 @@
-# CakePHP Monolog Plugin
+# CakePHP Monolog Plugin (Addtion Datadog processor)
 
 Despite the very advanced logging system offered in [CakePHP][1], I still would have had to write
 a lot more code to be able to handle logs the way I needed. To write the least code possible, I
 chose to go with the popular monolog library.
+
+`DatadogProcessor` append Datadog APM Trace ID and Span ID.
+This processor append the identifiers to all the log messages automatically.
+See: https://docs.datadoghq.com/tracing/advanced/connect_logs_and_traces/?tab=php
 
 ## Install
 
@@ -13,8 +17,14 @@ of the auto-loading magic.
 First, add this plugin as a requirement to your `composer.json`
 
 	{
+		"repositories": [
+			{
+				"type": "vcs",
+				"url": "https://github.com/SNakano/cakephp-monolog"
+			}
+		],
 		"require": {
-			"cakephp/monolog": "*"
+			"snakano/monolog": "dev-master"
 		}
 	}
 
@@ -100,15 +110,9 @@ CakeLog::config('logstash', array(
 ));
 ```
 
-The [`CakeEmailHandler`][7] was [just submitted][8] to the main [monolog][2] repo today. If it is not
-merged by the time you are reading this, just use [my fork][9].
-
 [1]:http://cakephp.org
 [2]:https://github.com/Seldaek/monolog
 [3]:http://getcomposer.org
 [4]:https://packagist.org/packages/monolog/monolog
 [5]:http://book.cakephp.org/2.0/en/core-libraries/logging.html
 [6]:http://logstash.net
-[7]:https://github.com/jadb/monolog/blob/master/src/Monolog/Handler/CakeEmailHandler.php
-[8]:https://github.com/Seldaek/monolog/pull/162
-[9]:https://github.com/jadb/monolog
