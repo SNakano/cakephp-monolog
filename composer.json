@@ -1,7 +1,7 @@
 {
-    "name": "snakano/monolog",
+    "name": "snakano/cakephp-monolog",
     "description": "CakePHP Monolog Plugin",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "type": "cakephp-plugin",
     "keywords": ["cakephp", "monolog", "plugin"],
     "homepage": "https://github.com/SNakano/cakephp-monolog",
